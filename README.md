@@ -4,6 +4,33 @@
 
 > 本项目不是高校官方产品，不生成或验证真实录取资格。高校名称、校徽和商标归各自权利人所有。
 
+<p align="center">
+  <img src="docs/images/cover.png" width="760" alt="录取拼豆工坊产品展示">
+</p>
+
+## 产品流程
+
+选择学校或上传校徽，生成可辨认的拼豆图纸，核对品牌色号与用量，最后导出完整 PDF 制作包。
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/images/school-library.png" alt="搜索学校和选择校徽"></td>
+    <td width="50%"><img src="docs/images/pattern-guide.png" alt="生成校徽拼豆图纸"></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>选择学校</strong><br>从院校索引检索，也可以上传自己的校徽图片</td>
+    <td align="center"><strong>生成图纸</strong><br>预览圆豆或方格效果，调整画质与网格</td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/images/materials.png" alt="品牌色号与材料清单"></td>
+    <td width="50%"><img src="docs/images/pdf-export.png" alt="导出八页 PDF 制作包"></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>核对材料</strong><br>按品牌统计色号、数量、底板和成品尺寸</td>
+    <td align="center"><strong>导出制作包</strong><br>生成包含坐标、清单与制作建议的八页 PDF</td>
+  </tr>
+</table>
+
 ## 功能
 
 - 学校搜索与校徽来源索引
@@ -57,7 +84,8 @@ cloud-database/*.import.*
 
 - 程序代码和文档使用 [MIT License](LICENSE)。
 - 第三方校徽、商标、品牌名称、色号及图片不随 MIT 许可证授权。
-- `project.private.config.json`、依赖目录、导出文件、宣传图和本地缓存已被忽略。
+- `project.private.config.json`、依赖目录、导出文件、原始宣传素材和本地缓存已被忽略。
+- `docs/images/` 只保留用于项目说明的精选产品截图。
 - 上传用户图片前，应提供隐私说明、保存期限和删除机制。
 
 ## 项目结构
