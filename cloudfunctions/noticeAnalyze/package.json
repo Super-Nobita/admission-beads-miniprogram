@@ -1,0 +1,9 @@
+{
+  "name": "notice-analyze",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "openai": "^4.104.0",
+    "wx-server-sdk": "^3.0.1"
+  }
+}

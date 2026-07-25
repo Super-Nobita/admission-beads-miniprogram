@@ -1,0 +1,9 @@
+{
+  "name": "ai-generate",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "openai": "^6.0.0",
+    "wx-server-sdk": "^3.0.1"
+  }
+}

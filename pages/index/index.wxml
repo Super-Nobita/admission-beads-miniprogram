@@ -1,0 +1,251 @@
+<view class="page">
+  <view class="topbar">
+    <view class="brand-copy">
+      <view class="brand-row">
+        <view class="brand-kicker">录取拼豆工坊</view>
+        <view class="brand-badge">校徽图纸</view>
+      </view>
+      <view class="brand-title">把校徽做成拼豆图纸</view>
+      <view class="brand-subtitle">选学校或上传照片，调整底板和色数，导出一份能直接拿去线下店制作的图纸。</view>
+      <view class="brand-stats">
+        <view>选素材</view>
+        <view>调规格</view>
+        <view>拿去拼</view>
+      </view>
+    </view>
+    <view class="brand-visual">
+      <view class="paper-sheet">
+        <view class="paper-line long"></view>
+        <view class="paper-line"></view>
+        <view class="paper-line short"></view>
+      </view>
+      <view class="seal-mark">录</view>
+    </view>
+    <button class="icon-button" bindtap="resetDesign">重置</button>
+  </view>
+
+  <view class="upload-panel">
+    <view class="section-label">选择素材</view>
+    <button class="upload-action" bindtap="chooseLogoImage">
+      <view class="upload-mark">＋</view>
+      <view class="upload-text">
+        <view class="upload-title">从相册选一张照片</view>
+        <view class="upload-subtitle">{{logoStatus}}</view>
+      </view>
+    </button>
+
+    <view class="school-search">
+      <view class="field-label">没有照片？搜索学校校徽</view>
+      <input class="school-input" value="{{schoolKeyword}}" bindinput="searchSchool" placeholder="例如：清华大学、北京大学、浙江大学" />
+      <view class="logo-source-note">
+        <view>{{logoSourceStatus}}</view>
+        <view wx:if="{{logoSourceName}}" class="logo-source-name">{{logoSourceName}}</view>
+      </view>
+      <scroll-view scroll-y class="school-results">
+        <block wx:for="{{schoolOptions}}" wx:key="name">
+          <button class="school-result {{selectedLogoSchool && selectedLogoSchool.name === item.name ? 'active' : ''}}" data-index="{{index}}" bindtap="chooseLogoSchool">
+            <view class="school-name">{{item.name}}</view>
+            <view class="school-meta">{{item.province}} · {{item.type}}</view>
+          </button>
+        </block>
+      </scroll-view>
+    </view>
+
+    <view class="spec-strip">
+      <view class="spec-item">
+        <view class="spec-label">底板</view>
+        <picker mode="selector" range="{{boardPresets}}" range-key="name" value="{{boardPresetIndex}}" bindchange="changeBoardPreset">
+          <view class="spec-value">{{boardPresets[boardPresetIndex].name}}</view>
+        </picker>
+      </view>
+      <view class="spec-item">
+        <view class="spec-label">色数</view>
+        <picker mode="selector" range="{{maxColorOptions}}" value="{{maxColorIndex}}" bindchange="changeMaxColors">
+          <view class="spec-value">{{maxColorOptions[maxColorIndex]}} 色</view>
+        </picker>
+      </view>
+      <view class="spec-item">
+        <view class="spec-label">品牌</view>
+        <picker mode="selector" range="{{colorSets}}" range-key="name" value="{{colorSetIndex}}" bindchange="changeColorSet">
+          <view class="spec-value">{{colorSets[colorSetIndex].name}}</view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="option-row">
+      <label class="switch-pill">
+        <switch checked="{{ditherEnabled}}" bindchange="toggleDither" color="#bd2b22" />
+        <text>抖动</text>
+      </label>
+      <view class="size-pill">{{cols}} × {{rows}} · {{sizeText}}</view>
+    </view>
+  </view>
+
+  <view wx:if="{{uploadedImagePath}}" class="source-band">
+    <image class="source-thumb" src="{{uploadedImagePath}}" mode="aspectFit"></image>
+    <view class="source-copy">
+      <view class="source-title">校徽原图</view>
+      <view class="source-meta">{{uploadedImageInfoText}}</view>
+    </view>
+  </view>
+
+  <view class="preview-panel">
+    <view class="panel-head">
+      <view>
+        <view class="section-label">制作图纸</view>
+        <view class="panel-title">拼豆预览</view>
+        <view class="panel-meta">{{cols}} × {{rows}} · {{beadCount}} 颗 · {{sizeText}}</view>
+      </view>
+      <button class="export-button" bindtap="exportPoster">高清图纸</button>
+    </view>
+
+    <view class="display-tabs">
+      <block wx:for="{{patternDisplayModes}}" wx:key="id">
+        <button class="display-tab {{patternDisplayModeIndex === index ? 'active' : ''}}" data-index="{{index}}" bindtap="changePatternDisplayMode">{{item.name}}</button>
+      </block>
+    </view>
+
+    <view class="preview-control">
+      <view class="preview-control-label">网格间距</view>
+      <picker mode="selector" range="{{gridGapOptions}}" range-key="name" value="{{gridGapIndex}}" bindchange="changeGridGap">
+        <view class="preview-control-value">{{gridGapOptions[gridGapIndex].name}}</view>
+      </picker>
+    </view>
+
+    <view class="board-frame">
+      <view class="bead-board logo-board board-mode-{{patternDisplayMode}}" style="grid-template-columns: repeat({{cols}}, 1fr); gap: {{gridGap}}rpx;">
+        <block wx:for="{{beads}}" wx:key="id">
+          <view
+            class="bead {{item.on ? 'is-on' : ''}}"
+            style="background: {{item.color}};"
+            data-index="{{index}}"
+            bindtap="paintBead"
+          >
+            <text wx:if="{{patternDisplayMode === 'code' && item.displayCode}}" class="bead-code">{{item.displayCode}}</text>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <view class="tool-row">
+      <button class="tool {{tool === 'paint' ? 'active' : ''}}" data-tool="paint" bindtap="chooseTool">画笔</button>
+      <button class="tool {{tool === 'erase' ? 'active' : ''}}" data-tool="erase" bindtap="chooseTool">橡皮</button>
+      <button class="tool" data-direction="x" bindtap="mirrorPattern">左右翻转</button>
+      <button class="tool" data-direction="y" bindtap="mirrorPattern">上下翻转</button>
+      <button class="tool" bindtap="sprinkleBeads">补细节</button>
+    </view>
+
+    <view class="export-grid">
+      <button class="export-card primary" bindtap="exportPdf">
+        <view class="export-card-title">导出 PDF</view>
+        <view class="export-card-meta">直接打印，含图纸和材料清单</view>
+      </button>
+      <button class="export-card" bindtap="exportPoster">
+        <view class="export-card-title">导出打印版图纸</view>
+        <view class="export-card-meta">高清图片，适合保存分享</view>
+      </button>
+      <button class="export-card" bindtap="exportMaterialList">
+        <view class="export-card-title">导出材料清单</view>
+        <view class="export-card-meta">品牌、色号、数量、备豆</view>
+      </button>
+      <button class="export-card" bindtap="exportCoordinateGuide">
+        <view class="export-card-title">导出坐标图</view>
+        <view class="export-card-meta">带编号，适合打印摆豆</view>
+      </button>
+    </view>
+  </view>
+
+  <view class="detail-panel">
+    <view class="panel-head compact">
+      <view>
+        <view class="panel-title">图纸详情</view>
+        <view class="panel-meta">{{motifText}}</view>
+      </view>
+    </view>
+    <view class="detail-grid">
+      <view class="detail-item">
+        <view class="detail-label">底板规格</view>
+        <view class="detail-value">{{cols}} × {{rows}}</view>
+      </view>
+      <view class="detail-item">
+        <view class="detail-label">成品尺寸</view>
+        <view class="detail-value">{{sizeText}}</view>
+      </view>
+      <view class="detail-item">
+        <view class="detail-label">实际用豆</view>
+        <view class="detail-value">{{beadCount}} 颗</view>
+      </view>
+      <view class="detail-item">
+        <view class="detail-label">建议备豆</view>
+        <view class="detail-value">+{{spareBeadCount}} 颗</view>
+      </view>
+    </view>
+    <view class="notice-box">
+      <view>当前品牌：{{colorSets[colorSetIndex].name}}</view>
+      <view>打印建议：优先导出“坐标图”，线下店按色号分区摆豆；大尺寸图纸建议分屏或打印后制作。</view>
+    </view>
+  </view>
+
+  <view class="materials-panel">
+    <view class="panel-head compact">
+      <view>
+        <view class="panel-title">材料清单</view>
+        <view class="panel-meta">{{colorSetNote}}</view>
+      </view>
+    </view>
+    <view class="legend-grid">
+      <block wx:for="{{materialList}}" wx:key="code">
+        <view class="legend-item">
+          <view class="legend-color" style="background: {{item.color}};"></view>
+          <view class="legend-copy">
+            <view class="legend-name">图纸 {{item.symbol}} · {{item.brand}}</view>
+            <view class="legend-subname">品牌色号 {{item.code}} · 备 {{item.spare}}</view>
+          </view>
+          <view class="legend-count">{{item.count}} 颗</view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <view class="guide-panel">
+    <view class="panel-head compact">
+      <view>
+        <view class="panel-title">制作指南</view>
+        <view class="panel-meta">拿到线下店就按这套流程做</view>
+      </view>
+    </view>
+    <view class="step-list">
+      <block wx:for="{{craftSteps}}" wx:key="title">
+        <view class="step-item">
+          <view class="step-index">{{index + 1}}</view>
+          <view class="step-copy">
+            <view class="step-title">{{item.title}}</view>
+            <view class="step-detail">{{item.detail}}</view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <view class="guide-panel">
+    <view class="panel-head compact">
+      <view>
+        <view class="panel-title">图片尺寸建议</view>
+        <view class="panel-meta">先处理清楚，再量化成豆子</view>
+      </view>
+    </view>
+    <view class="tip-list">
+      <block wx:for="{{imageSizeTips}}" wx:key="*this">
+        <view class="tip-item">{{item}}</view>
+      </block>
+    </view>
+  </view>
+
+  <canvas class="export-canvas" canvas-id="posterCanvas" style="width: 2400px; height: 1900px;"></canvas>
+  <canvas class="export-canvas" canvas-id="pixelCanvas" style="width: {{pixelCanvasW}}px; height: {{pixelCanvasH}}px;"></canvas>
+
+  <view class="bottom-action-bar">
+    <button class="bottom-action ghost" bindtap="chooseLogoImage">上传</button>
+    <button class="bottom-action" bindtap="exportPdf">导出 PDF</button>
+  </view>
+</view>

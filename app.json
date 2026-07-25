@@ -1,0 +1,13 @@
+{
+  "pages": [
+    "pages/index/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "拼豆录取通知书",
+    "navigationBarBackgroundColor": "#fff8f0",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#fff8f0"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

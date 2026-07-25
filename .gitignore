@@ -1,0 +1,32 @@
+# WeChat Developer Tools local settings
+project.private.config.json
+
+# Dependencies and logs
+**/node_modules/
+*.log
+npm-debug.log*
+
+# Generated exports and temporary files
+output/
+tmp/
+cloud-database/*.import.json
+cloud-database/*.import.ndjson
+
+# Locally cached school emblems and promotional artwork are not code assets.
+# See NOTICE-ASSETS.md before redistributing any visual material.
+assets/school-logos/
+assets/promo-screens/
+assets/phone-model-*.png
+assets/promo-*.png
+
+# Heavy intermediate logo databases. The compact runtime index remains tracked.
+data/schoolLogoCache.generated.js
+data/schoolLogoDatabase.generated.js
+data/schoolLogoDatabase.generated.json
+data/schoolLogoSources.generated.js
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
